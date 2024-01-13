@@ -34,14 +34,7 @@ protected:
 
     // Speed at which the camera moves to its new position
     UPROPERTY(EditAnywhere, Category = "Camera")
-    float CameraInterpSpeed = 3.0f;
-
-    // Define the offset values for the camera
-    UPROPERTY(EditAnywhere, Category = "Camera")
-    float ForwardOffset = 230.0f; // Adjust as needed
-
-    UPROPERTY(EditAnywhere, Category = "Camera")
-    float BackwardOffset = -230.0f; // Adjust as needed
+    float CameraInterpSpeed = 5.0f;
 
     // Movement speed of the pawn
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -53,7 +46,7 @@ protected:
 
     // Normal movement speed of the pawn (when no key is pressed)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-    float CurrentSpeed = 400.0f;
+    float NormalSpeed = 400.0f;
 
     // Increased movement speed of the pawn (when a key is pressed)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -85,6 +78,9 @@ private:
     // Camera Component
     UPROPERTY(VisibleAnywhere)
     UCameraComponent* Camera;
+
+    // Current speed of the pawn
+    float CurrentSpeed = 0.0f;
 
     // Direction of forward movement (-1 for backward, 1 for forward, 0 for stop)
     int32 MovementDirection = 0;

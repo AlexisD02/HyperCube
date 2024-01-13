@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CubePawn.h"
 
 ACubePawn::ACubePawn()
@@ -9,11 +8,6 @@ ACubePawn::ACubePawn()
 
     // Create and setup components
     CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
-
-    /*! We need it since we want to make it's physics to be able to jump/double jump !
-    ! Problem is it disables the collision with any shape/object ! */
-    //CubeMesh->SetSimulatePhysics(true);
-
     CubeMesh->BodyInstance.SetCollisionProfileName("Pawn");
     CubeMesh->SetNotifyRigidBodyCollision(true);
     RootComponent = CubeMesh;
@@ -21,10 +15,15 @@ ACubePawn::ACubePawn()
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
     SpringArm->SetupAttachment(RootComponent);
     SpringArm->TargetArmLength = 500.0f;
+    //SpringArm->bEnableCameraLag = true;
+    //SpringArm->CameraLagSpeed = 1.0f;
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArm);
 
+    // Initialize default values
+    CurrentSpeed = NormalSpeed;
+    bIsJumping = false;
 }
 
 // Called when the game starts or when spawned
@@ -54,13 +53,18 @@ void ACubePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 // Update camera position based on movement
 void ACubePawn::UpdateCameraPosition(float DeltaTime)
 {
-    if (SpringArm != nullptr) {
+    if (SpringArm != nullptr)
+    {
+        // Define the offset values for the camera
+        const float ForwardOffset = 80.0f; // Adjust as needed
+        const float BackwardOffset = -80.0f; // Adjust as needed
+
         // Calculate the desired offset based on movement direction
         float DesiredOffset = (CurrentSpeed > 0) ? ForwardOffset : (CurrentSpeed < 0) ? BackwardOffset : 0.0f;
 
         // Smoothly interpolate to the new offset
         FVector NewSocketOffset = SpringArm->SocketOffset;
-        NewSocketOffset.Y = FMath::FInterpTo(SpringArm->SocketOffset.Y, DesiredOffset, DeltaTime, CameraInterpSpeed);
+        NewSocketOffset.Y = FMath::FInterpTo(SpringArm->SocketOffset.Y, DesiredOffset, DeltaTime, 5.0f);
         SpringArm->SocketOffset = NewSocketOffset;
     }
 }
@@ -68,14 +72,18 @@ void ACubePawn::UpdateCameraPosition(float DeltaTime)
 // Handle forward movement
 void ACubePawn::MoveForward(float Value)
 {
-    CurrentSpeed = (Value != 0.0f) ? PressedSpeed * FMath::Sign(Value) : CurrentSpeed;
+    if (Value != 0.0f)
+    {
+        // Adjust CurrentSpeed to PressedSpeed when moving forward or backward
+        CurrentSpeed = PressedSpeed * FMath::Sign(Value);
+    }
 }
 
 // Handle jump input
 void ACubePawn::Jump()
 {
-    if (!bIsJumping && CubeMesh->IsSimulatingPhysics()) {
-        CubeMesh->AddImpulse(FVector(0.0f, 0.0f, JumpForce));
+    if (!bIsJumping && CubeMesh->IsSimulatingPhysics())
+    {
         bIsJumping = true;
     }
 }
@@ -84,14 +92,17 @@ void ACubePawn::Jump()
 void ACubePawn::HandleMovement(float DeltaTime)
 {
     // Apply continuous movement based on the current speed
-    FVector NewLocation = GetActorLocation() + FVector(0.0f, CurrentSpeed * DeltaTime, 0.0f);
+    FVector NewLocation = GetActorLocation();
+    NewLocation.Y += CurrentSpeed * DeltaTime;
     SetActorLocation(NewLocation);
 }
 
 // Handle jump logic
 void ACubePawn::HandleJump()
 {
-    if (bIsJumping) {
+    if (bIsJumping)
+    {
+        CubeMesh->AddImpulse(FVector(0.0f, 0.0f, JumpForce));
         bIsJumping = false;
     }
 }
