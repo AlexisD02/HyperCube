@@ -18,13 +18,8 @@ Welcome to the official repository for HyperCube, a vibrant and engaging 2.5D rh
 - In Visual Studio, set the solution configuration to 'Development Editor' and platform to 'Win64'.
 - Build the solution by right-clicking the project in the Solution Explorer and selecting "Build".
 
-### 5. Open the Project in Unreal Engine
-- Double-click the `.uproject` file to open the project in Unreal Engine Editor.
-- If prompted to rebuild binaries, click "Yes".
-
 ### 6. Run the Game
 - Once open in Unreal Engine Editor, you can press the 'Play' button to run the game in the editor.
-- For a standalone game, select 'Launch' or use the packaging options to create an executable.
 
 ## Version Control Best Practices and Common Issues in UE5
 
