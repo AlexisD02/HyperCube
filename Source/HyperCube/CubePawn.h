@@ -25,6 +25,8 @@ public:
 
     void UpdateCameraPosition(float DeltaTime);
 
+    void HandleMovement(float DeltaTime);
+
 protected:
     virtual void Tick(float DeltaTime) override;
 
@@ -48,4 +50,8 @@ private:
 
     UPROPERTY(VisibleAnywhere)
     UCameraComponent* Camera;
+
+    // Jump force
+    UPROPERTY(EditAnywhere)
+    float JumpForce = 400.0f;
 };

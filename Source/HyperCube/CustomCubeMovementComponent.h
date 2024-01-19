@@ -30,8 +30,6 @@ public:
     // Function to handle jump input
     void Jump();
 
-    void HandleMovement(float DeltaTime);
-
     float GetCurrentSpeed();
 
 private:
@@ -42,11 +40,13 @@ private:
     // Current movement speed
     float CurrentSpeed = 0.0f;
 
-    // Indicates whether the pawn is currently jumping
-    bool bIsJumping = false;
-
     // Jump force
     UPROPERTY(EditAnywhere)
     float JumpForce = 500.0f;
+
+    // Checks if the pawn is grounded
+    //bool IsGrounded() const;
+
+    const float GroundCheckDistance = 50.0f; // Adjust this value based on testing
 
 };

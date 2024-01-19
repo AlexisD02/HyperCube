@@ -8,10 +8,11 @@ ACubePawn::ACubePawn()
 {
     PrimaryActorTick.bCanEverTick = true;
 
+    // Set auto possession for the pawn to the lowest numbered player
+    AutoPossessPlayer = EAutoReceiveInput::Player0;
+
     CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
     CubeMesh->SetSimulatePhysics(true);
-    CubeMesh->BodyInstance.SetCollisionProfileName("Pawn");
-    CubeMesh->SetNotifyRigidBodyCollision(true);
     RootComponent = CubeMesh;
 
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -29,6 +30,7 @@ void ACubePawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     UpdateCameraPosition(DeltaTime);
+    HandleMovement(DeltaTime);
 }
 
 void ACubePawn::UpdateCameraPosition(float DeltaTime)
@@ -45,4 +47,14 @@ void ACubePawn::UpdateCameraPosition(float DeltaTime)
         NewSocketOffset.Y = FMath::FInterpTo(SpringArm->SocketOffset.Y, DesiredOffset, DeltaTime, CameraInterpSpeed);
         SpringArm->SocketOffset = NewSocketOffset;
     }
+}
+
+void ACubePawn::HandleMovement(float DeltaTime)
+{
+    // Get the current speed from the movement component
+    float CurrentSpeed = CubeMovement->GetCurrentSpeed();
+
+    // Handle continuous movement based on the current speed
+    FVector NewLocation = GetActorLocation() + FVector(0.0f, CurrentSpeed * DeltaTime, 0.0f);
+    SetActorLocation(NewLocation);
 }

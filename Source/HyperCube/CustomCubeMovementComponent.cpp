@@ -19,7 +19,7 @@ void UCustomCubeMovementComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    HandleMovement(DeltaTime);
+    //HandleMovement(DeltaTime);
 }
 
 void UCustomCubeMovementComponent::Move(float Value)
@@ -36,24 +36,29 @@ float UCustomCubeMovementComponent::GetCurrentSpeed()
     return CurrentSpeed;
 }
 
-void UCustomCubeMovementComponent::HandleMovement(float DeltaTime)
-{
-    if (!GetOwner()) return;
-
-    // Handle continuous movement based on the current speed
-    FVector NewLocation = GetOwner()->GetActorLocation() + FVector(0.0f, CurrentSpeed * DeltaTime, 0.0f);
-    GetOwner()->SetActorLocation(NewLocation);
-}
+//bool UCustomCubeMovementComponent::IsGrounded() const
+//{
+//    // Get the owner and its location
+//    AActor* Owner = GetOwner();
+//    if (!Owner) return false;
+//
+//    FVector Start = Owner->GetActorLocation();
+//    FVector End = Start - FVector(0.0f, 0.0f, GroundCheckDistance); // Check a short distance below the pawn
+//
+//    // Set up the query parameters
+//    FHitResult HitResult;
+//    FCollisionQueryParams QueryParams;
+//    QueryParams.AddIgnoredActor(Owner); // Ignore the pawn itself
+//
+//    // Perform the raycast
+//    return Owner->GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
+//}
 
 void UCustomCubeMovementComponent::Jump()
 {
-    if (bIsJumping) return;
-
-    // Add jump logic here
-    bIsJumping = true;
-
-    // Example jump implementation
-    if (UStaticMeshComponent* MeshComp = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent())) {
-        MeshComp->AddImpulse(FVector(0.0f, 0.0f, JumpForce));
-    }
+    //if (IsGrounded()) {
+        if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent())) {
+            CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
+        }
+    //}
 }
