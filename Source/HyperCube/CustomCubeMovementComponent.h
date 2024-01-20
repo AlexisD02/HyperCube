@@ -32,6 +32,8 @@ public:
 
     float GetCurrentSpeed();
 
+    bool IsGrounded();
+
 private:
     // Speed properties
     UPROPERTY(EditAnywhere)
@@ -42,11 +44,8 @@ private:
 
     // Jump force
     UPROPERTY(EditAnywhere)
-    float JumpForce = 500.0f;
+    float JumpForce = 600.0f;
 
-    // Checks if the pawn is grounded
-    //bool IsGrounded() const;
-
-    const float GroundCheckDistance = 50.0f; // Adjust this value based on testing
+    float GroundCheckDistance = 100.0f; // Adjust this value based on testing
 
 };

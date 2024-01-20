@@ -19,6 +19,13 @@ ACubePawn::ACubePawn()
     SpringArm->SetupAttachment(RootComponent);
     SpringArm->TargetArmLength = 800.0f;
 
+    SpringArm->bDoCollisionTest = false;
+
+    // Disable rotation inheritance
+    SpringArm->bInheritPitch = false;
+    SpringArm->bInheritYaw = false;
+    SpringArm->bInheritRoll = false;
+
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArm);
 

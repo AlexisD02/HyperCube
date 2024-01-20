@@ -36,29 +36,30 @@ float UCustomCubeMovementComponent::GetCurrentSpeed()
     return CurrentSpeed;
 }
 
-//bool UCustomCubeMovementComponent::IsGrounded() const
-//{
-//    // Get the owner and its location
-//    AActor* Owner = GetOwner();
-//    if (!Owner) return false;
-//
-//    FVector Start = Owner->GetActorLocation();
-//    FVector End = Start - FVector(0.0f, 0.0f, GroundCheckDistance); // Check a short distance below the pawn
-//
-//    // Set up the query parameters
-//    FHitResult HitResult;
-//    FCollisionQueryParams QueryParams;
-//    QueryParams.AddIgnoredActor(Owner); // Ignore the pawn itself
-//
-//    // Perform the raycast
-//    return Owner->GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-//}
+bool UCustomCubeMovementComponent::IsGrounded()
+{
+    FVector Start = GetOwner()->GetActorLocation();
+    FVector End = Start - FVector(0.0f, 0.0f, GroundCheckDistance); // Adjust GroundCheckDistance
+
+    FHitResult HitResult;
+    FCollisionQueryParams CollisionParams;
+    CollisionParams.AddIgnoredActor(GetOwner()); // Ignore the cube itself
+
+    // Perform the raycast
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams);
+
+    // Log the result
+    UE_LOG(LogTemp, Warning, TEXT("IsGrounded: %s"), bHit ? TEXT("True") : TEXT("False"));
+
+    return bHit; // Returns true if the ray hits a surface below
+}
+
 
 void UCustomCubeMovementComponent::Jump()
 {
-    //if (IsGrounded()) {
+    if (IsGrounded()) {
         if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent())) {
             CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
         }
-    //}
+    }
 }
