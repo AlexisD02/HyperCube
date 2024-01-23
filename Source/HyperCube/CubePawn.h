@@ -54,4 +54,5 @@ private:
     // Jump force
     UPROPERTY(EditAnywhere)
     float JumpForce = 400.0f;
+
 };

@@ -37,14 +37,14 @@ public:
 private:
     // Speed properties
     UPROPERTY(EditAnywhere)
-    float NormalSpeed = 400.0f;
+    float NormalSpeed = 700.0f;
 
     // Current movement speed
     float CurrentSpeed = 0.0f;
 
     // Jump force
     UPROPERTY(EditAnywhere)
-    float JumpForce = 600.0f;
+    float JumpForce = 1300.0f;
 
     float GroundCheckDistance = 100.0f; // Adjust this value based on testing
 

@@ -30,6 +30,7 @@ ACubePawn::ACubePawn()
     Camera->SetupAttachment(SpringArm);
 
     CubeMovement = CreateDefaultSubobject<UCustomCubeMovementComponent>(TEXT("CubeMovement"));
+
 }
 
 void ACubePawn::Tick(float DeltaTime)
