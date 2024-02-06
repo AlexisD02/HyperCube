@@ -2,6 +2,8 @@
 
 
 #include "SpikeActor.h"
+#include "Kismet/GameplayStatics.h"
+#include "CubePawn.h"
 
 // Sets default values
 ASpikeActor::ASpikeActor()
@@ -9,13 +11,16 @@ ASpikeActor::ASpikeActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpikeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Spike Mesh"));
+	SetRootComponent(SpikeMesh);
+
 }
 
 // Called when the game starts or when spawned
 void ASpikeActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnActorHit.AddDynamic(this, &ASpikeActor::OnHit);
 }
 
 // Called every frame
@@ -25,3 +30,14 @@ void ASpikeActor::Tick(float DeltaTime)
 
 }
 
+void ASpikeActor::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Something."));
+
+	if (OtherActor->GetClass()->IsChildOf(ACubePawn::StaticClass()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Cuber!"));
+
+		OtherActor->Destroy();  // Remove teabag so ApplyDamage function does not run multiple times 
+	}
+}

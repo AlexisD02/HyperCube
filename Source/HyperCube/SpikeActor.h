@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SpikeActor.generated.h"
 
+class ACubePawn;
+
 UCLASS()
 class HYPERCUBE_API ASpikeActor : public AActor
 {
@@ -23,4 +25,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* SpikeMesh;
+
+	UFUNCTION()
+		void OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 };
