@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "CustomCubeMovementComponent.generated.h"
 
+class ADefaultLevelGameModeBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HYPERCUBE_API UCustomCubeMovementComponent : public UActorComponent
@@ -34,6 +35,9 @@ public:
 
     bool IsGrounded();
 
+    UPROPERTY(VisibleAnywhere)
+        bool hasJumped = false;
+
 private:
     // Speed properties
     UPROPERTY(EditAnywhere)
@@ -48,4 +52,6 @@ private:
 
     float GroundCheckDistance = 100.0f; // Adjust this value based on testing
 
+    UPROPERTY()
+        ADefaultLevelGameModeBase* GameModeRef;
 };

@@ -2,6 +2,8 @@
 
 
 #include "CustomCubeMovementComponent.h"
+#include "DefaultLevelGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 UCustomCubeMovementComponent::UCustomCubeMovementComponent()
 {
@@ -13,6 +15,9 @@ UCustomCubeMovementComponent::UCustomCubeMovementComponent()
 void UCustomCubeMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+    // Get a reference to the level gamemode base
+    GameModeRef = Cast<ADefaultLevelGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 void UCustomCubeMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -57,9 +62,35 @@ bool UCustomCubeMovementComponent::IsGrounded()
 
 void UCustomCubeMovementComponent::Jump()
 {
+    UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
     if (IsGrounded()) {
-        if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent())) {
+        if (CubeMesh) 
+        {
+          
+            
             CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
+            hasJumped = true;
+
+            FRotator Rotation = CubeMesh->GetComponentRotation();
+            Rotation.Pitch += 90.0f;
+
+            CubeMesh->SetWorldRotation(Rotation);
+            
+            
+        }
+    }
+    else
+    {
+        if (hasJumped)
+        {
+            if (GameModeRef)
+            {
+                if (GameModeRef->bCanDoubleJump)
+                {
+                    CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
+                    hasJumped = false;
+                }
+            }
         }
     }
 }

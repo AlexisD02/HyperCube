@@ -23,6 +23,8 @@ public:
     UPROPERTY(VisibleAnywhere)
     UCustomCubeMovementComponent* CubeMovement;
 
+    
+
     void UpdateCameraPosition(float DeltaTime);
 
     void HandleMovement(float DeltaTime);
