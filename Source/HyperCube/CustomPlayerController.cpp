@@ -38,7 +38,6 @@ void ACustomPlayerController::CallJump()
 {
     if (CubePawn) {
         // Call the pawn's jump function
-        CubePawn->CubeMovement->hasJumped = true;
         CubePawn->CubeMovement->Jump();
     }
 }

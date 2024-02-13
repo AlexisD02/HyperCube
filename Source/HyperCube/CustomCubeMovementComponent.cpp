@@ -64,32 +64,26 @@ void UCustomCubeMovementComponent::Jump()
 {
     UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
     if (IsGrounded()) {
-        if (CubeMesh) 
+        if (CubeMesh)
         {
-          
-            
             CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
-            hasJumped = true;
+            hasJumped = false;
 
             FRotator Rotation = CubeMesh->GetComponentRotation();
             Rotation.Pitch += 90.0f;
 
             CubeMesh->SetWorldRotation(Rotation);
-            
-            
         }
     }
-    else
+    else // If (bCanDoubleJump)
     {
-        if (hasJumped)
+        if (CubeMesh)
         {
-            if (GameModeRef)
+            if (!hasJumped)
             {
-                if (GameModeRef->bCanDoubleJump)
-                {
-                    CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
-                    hasJumped = false;
-                }
+                UE_LOG(LogTemp, Warning, TEXT("Enetered double jump"));
+                CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
+                hasJumped = true;
             }
         }
     }
