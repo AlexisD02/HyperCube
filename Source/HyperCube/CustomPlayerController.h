@@ -27,6 +27,12 @@ public:
     // Function to handle jump input
     void CallJump();
 
+    // Function to handle dash input
+    void CallDash();
+
+    // Function to handle dash input
+    void CallGroundSlam();
+
 protected:
     virtual void BeginPlay() override;
 };

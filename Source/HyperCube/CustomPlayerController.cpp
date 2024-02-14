@@ -24,6 +24,12 @@ void ACustomPlayerController::SetupInputComponent()
 
     // Bind Jump action
     InputComponent->BindAction("Jump", IE_Pressed, this, &ACustomPlayerController::CallJump);
+
+    // Bind Dash action
+    InputComponent->BindAction("Dash", IE_Pressed, this, &ACustomPlayerController::CallDash);
+
+    // Bind Jump action
+    InputComponent->BindAction("GroundSlam", IE_Pressed, this, &ACustomPlayerController::CallGroundSlam);
 }
 
 void ACustomPlayerController::CallMove(float Value)
@@ -31,6 +37,8 @@ void ACustomPlayerController::CallMove(float Value)
     if (CubePawn) {
         // Call the pawn's movement function
         CubePawn->CubeMovement->Move(Value);
+        //CubePawn->CubeMovement->DirectionSign = abs(CubePawn->CubeMovement->DirectionSign);
+        //CubePawn->CubeMovement->DirectionSign *= Value;
     }
 }
 
@@ -42,4 +50,19 @@ void ACustomPlayerController::CallJump()
     }
 }
 
+void ACustomPlayerController::CallDash()
+{
+    if (CubePawn) {
+        // Call the pawn's dash function
+        CubePawn->CubeMovement->Dash();
+    }
+}
 
+void ACustomPlayerController::CallGroundSlam()
+{
+    if (CubePawn) 
+    {
+        // Call the pawn's ground slam function
+        CubePawn->CubeMovement->GroundSlam();
+    }
+}

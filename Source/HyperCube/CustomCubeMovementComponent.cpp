@@ -59,6 +59,21 @@ bool UCustomCubeMovementComponent::IsGrounded()
     return bHit; // Returns true if the ray hits a surface below
 }
 
+void UCustomCubeMovementComponent::EnableDoubleJump()
+{
+    bCanDoubleJump = true;
+}
+
+void UCustomCubeMovementComponent::EnableDash()
+{
+    bCanDash = true;
+}
+
+void UCustomCubeMovementComponent::EnableGroundSlam()
+{
+    bCanGroundSlam = true;
+}
+
 
 void UCustomCubeMovementComponent::Jump()
 {
@@ -75,15 +90,50 @@ void UCustomCubeMovementComponent::Jump()
             CubeMesh->SetWorldRotation(Rotation);
         }
     }
-    else // If (bCanDoubleJump)
+    else 
     {
-        if (CubeMesh)
+        if (bCanDoubleJump)  // Check if we have the double jump power up
         {
-            if (!hasJumped)
+            if (CubeMesh)
             {
-                UE_LOG(LogTemp, Warning, TEXT("Enetered double jump"));
-                CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
-                hasJumped = true;
+                if (!hasJumped)
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Enetered double jump"));
+                    CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
+                    hasJumped = true;
+                }
+            }
+        }
+    }
+}
+
+void UCustomCubeMovementComponent::Dash()
+{
+    if (bCanDash)  // Check if we have the dash power up
+    {
+        UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+
+        if (!IsGrounded())
+        {
+            if (CubeMesh)
+            {                                       // DirectionSign *
+                CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, DirectionSign * DashForce, 0.0f));
+            }
+        }
+    }
+}
+
+void UCustomCubeMovementComponent::GroundSlam()
+{
+    if (bCanGroundSlam)  // Check if we have the ground slam power up
+    {
+        UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+
+        if (!IsGrounded())
+        {
+            if (CubeMesh)
+            {
+                CubeMesh->SetPhysicsLinearVelocity(FVector(GroundSlamForce, 0.0f, 0.0f));
             }
         }
     }
