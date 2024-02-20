@@ -56,6 +56,8 @@ bool UCustomCubeMovementComponent::IsGrounded()
     // Log the result
     UE_LOG(LogTemp, Warning, TEXT("IsGrounded: %s"), bHit ? TEXT("True") : TEXT("False"));
 
+    if (bHit) bHasDashed = false;
+
     return bHit; // Returns true if the ray hits a surface below
 }
 
@@ -116,8 +118,11 @@ void UCustomCubeMovementComponent::Dash()
         if (!IsGrounded())
         {
             if (CubeMesh)
-            {                                       // DirectionSign *
-                CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, DirectionSign * DashForce, 0.0f));
+            {                                       
+                if (!bHasDashed) {
+                    CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, DashForce * FMath::Sign(CurrentSpeed), 0.0f));
+                    bHasDashed = true;
+                }
             }
         }
     }

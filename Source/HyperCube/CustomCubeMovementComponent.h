@@ -66,7 +66,8 @@ public:
         bool hasJumped = false;
 
     UPROPERTY(VisibleAnywhere)
-        float DirectionSign = 1.0f;
+    bool bHasDashed = false;
+
 
 private:
     // Speed properties
