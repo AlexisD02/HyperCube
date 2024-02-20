@@ -50,7 +50,7 @@ void ADoubleJumpAP::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
     CubePawn = Cast<ACubePawn>(OtherActor);
 
     if (CubePawn) {
-        //CubePawn->CubeMovement->EnableDoubleJump();
+        CubePawn->CubeMovement->EnableDoubleJump();
         Destroy();
     }
 }

@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DashAP.h"
+#include "GroundSlamAP.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-ADashAP::ADashAP()
+AGroundSlamAP::AGroundSlamAP()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
     // Create subobjects for the different components.
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-    DoubleJumpABoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DashBoxMesh"));
+    DoubleJumpABoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GroundSlamBoxMesh"));
     CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 
     // Set default values for the components.
@@ -23,16 +23,16 @@ ADashAP::ADashAP()
 }
 
 // Called when the game starts or when spawned
-void ADashAP::BeginPlay()
+void AGroundSlamAP::BeginPlay()
 {
     Super::BeginPlay();
 
     // Register Events
-    CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ADashAP::OnOverlapBegin);
+    CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AGroundSlamAP::OnOverlapBegin);
 }
 
 // Called every frame
-void ADashAP::Tick(float DeltaTime)
+void AGroundSlamAP::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime); // Call parent class tick function
 
@@ -45,12 +45,14 @@ void ADashAP::Tick(float DeltaTime)
     RunningTime += DeltaTime; // Update running time
 }
 
-void ADashAP::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AGroundSlamAP::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     CubePawn = Cast<ACubePawn>(OtherActor);
 
     if (CubePawn) {
-        CubePawn->CubeMovement->EnableDash();
+        CubePawn->CubeMovement->EnableGroundSlam();
         Destroy();
     }
 }
+
+

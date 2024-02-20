@@ -34,7 +34,7 @@ protected:
 
     // Speed at which the camera moves to its new position
     UPROPERTY(EditAnywhere, Category = "Camera")
-    float CameraInterpSpeed = 3.0f;
+    float CameraInterpSpeed = 2.0f;
 
     // Define the offset values for the camera
     UPROPERTY(EditAnywhere, Category = "Camera")

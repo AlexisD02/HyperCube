@@ -3,6 +3,7 @@
 
 #include "CubePawn.h"
 #include "CustomCubeMovementComponent.h"
+#include "PhysicsEngine/PhysicsSettings.h"
 
 ACubePawn::ACubePawn()
 {

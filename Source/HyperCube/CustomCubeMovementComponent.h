@@ -41,15 +41,15 @@ public:
 
     // When you get the power-up, this becomes true, letting the player double jump.
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-        bool bCanDoubleJump = true;
+        bool bCanDoubleJump;
 
     // When you get the power-up, this becomes true, letting the player dash.
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-        bool bCanDash = true;
+        bool bCanDash;
 
     // When you get the power-up, this becomes true, letting the player ground slam.
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-        bool bCanGroundSlam = true;
+        bool bCanGroundSlam;
 
     // Functions to be called in order to change the above bools to true.
     UFUNCTION()

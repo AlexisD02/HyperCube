@@ -18,6 +18,9 @@ void UCustomCubeMovementComponent::BeginPlay()
 
     // Get a reference to the level gamemode base
     GameModeRef = Cast<ADefaultLevelGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+    bCanDoubleJump = false;
+    bCanDash = false;
+    bCanGroundSlam = false;
 }
 
 void UCustomCubeMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -108,6 +111,9 @@ void UCustomCubeMovementComponent::Jump()
         }
     }
 }
+
+
+
 
 void UCustomCubeMovementComponent::Dash()
 {
