@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CubePawn.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "CustomPlayerController.generated.h"
 
 /**
@@ -32,6 +33,26 @@ public:
 
     // Function to handle dash input
     void CallGroundSlam();
+
+    void PauseMenu();
+
+    void GameOverScreen();
+
+    // Reference to the pause menu widget class
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<UUserWidget> PauseMenuWidgetClass;
+
+    //// The actual instance of the pause menu widget
+    UPROPERTY()
+    UUserWidget* PauseMenuWidget;
+
+    // Reference to the pause menu widget class
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<UUserWidget> GameOverScreenWidgetClass;
+
+    //// The actual instance of the pause menu widget
+    UPROPERTY()
+    UUserWidget* GameOverScreenWidget;
 
 protected:
     virtual void BeginPlay() override;

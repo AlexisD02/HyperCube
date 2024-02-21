@@ -4,6 +4,7 @@
 #include "CustomPlayerController.h"
 #include "CustomCubeMovementComponent.h"
 #include "CubePawn.h"
+#include "Blueprint/UserWidget.h"
 
 
 void ACustomPlayerController::BeginPlay()
@@ -31,6 +32,8 @@ void ACustomPlayerController::SetupInputComponent()
 
     // Bind Jump action
     InputComponent->BindAction("GroundSlam", IE_Pressed, this, &ACustomPlayerController::CallGroundSlam);
+
+    InputComponent->BindAction("Pause", IE_Pressed, this, &ACustomPlayerController::PauseMenu);
 }
 
 void ACustomPlayerController::CallMove(float Value)
@@ -65,5 +68,41 @@ void ACustomPlayerController::CallGroundSlam()
     {
         // Call the pawn's ground slam function
         CubePawn->CubeMovement->GroundSlam();
+    }
+}
+
+void ACustomPlayerController::PauseMenu()
+{
+    if (!PauseMenuWidget && PauseMenuWidgetClass)
+    {
+        // Create the pause menu widget if it doesn't exist
+        PauseMenuWidget = CreateWidget(this, PauseMenuWidgetClass);
+    }
+
+    if (PauseMenuWidget)
+    {
+        // Add the widget to the viewport and pause the game
+        PauseMenuWidget->AddToViewport();
+        SetInputMode(FInputModeUIOnly());
+        bShowMouseCursor = true;
+        SetPause(true);
+    }
+}
+
+void ACustomPlayerController::GameOverScreen()
+{
+    if (!GameOverScreenWidget && GameOverScreenWidgetClass)
+    {
+        // Create the pause menu widget if it doesn't exist
+        GameOverScreenWidget = CreateWidget(this, GameOverScreenWidgetClass);
+    }
+
+    if (GameOverScreenWidget)
+    {
+        // Add the widget to the viewport and pause the game
+        GameOverScreenWidget->AddToViewport();
+        SetInputMode(FInputModeUIOnly());
+        bShowMouseCursor = true;
+        SetPause(true);
     }
 }

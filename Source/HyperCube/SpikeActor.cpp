@@ -4,6 +4,7 @@
 #include "SpikeActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "CubePawn.h"
+#include "CustomPlayerController.h"
 
 // Sets default values
 ASpikeActor::ASpikeActor()
@@ -38,6 +39,13 @@ void ASpikeActor::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImp
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Cuber!"));
 
+		// Attempt to cast to CustomPlayerController
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController))
+		{
+			// Call GameOverScreen function if accessible
+			CustomController->GameOverScreen();
+		}
 		OtherActor->Destroy();  // Remove teabag so ApplyDamage function does not run multiple times 
 	}
 }
