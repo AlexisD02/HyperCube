@@ -28,7 +28,7 @@ public:
 
 	// Main mesh for the ammo box
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* DoubleJumpABoxMesh;
+	UStaticMeshComponent* DashArrowMesh;
 
 	// Collision box to detect overlaps with the player
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

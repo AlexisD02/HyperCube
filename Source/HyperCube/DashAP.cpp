@@ -12,13 +12,13 @@ ADashAP::ADashAP()
 
     // Create subobjects for the different components.
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-    DoubleJumpABoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DashBoxMesh"));
+    DashArrowMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DashArrowMesh"));
     CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 
     // Set default values for the components.
-    DoubleJumpABoxMesh->SetupAttachment(RootComponent);
-    CollisionBox->SetupAttachment(DoubleJumpABoxMesh);
-    CollisionBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f)); // Adjust the size as needed
+    DashArrowMesh->SetupAttachment(RootComponent);
+    CollisionBox->SetupAttachment(DashArrowMesh);
+    CollisionBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f));
     CollisionBox->SetCollisionProfileName(TEXT("Trigger"));
 }
 

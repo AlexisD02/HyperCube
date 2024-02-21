@@ -12,13 +12,13 @@ ADoubleJumpAP::ADoubleJumpAP()
 
     // Create subobjects for the different components.
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-    DoubleJumpABoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoubleJumpABoxMesh"));
+    DoubleJumpArrowMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoubleJumpArrowMesh"));
     CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 
     // Set default values for the components.
-    DoubleJumpABoxMesh->SetupAttachment(RootComponent);
-    CollisionBox->SetupAttachment(DoubleJumpABoxMesh);
-    CollisionBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f)); // Adjust the size as needed
+    DoubleJumpArrowMesh->SetupAttachment(RootComponent);
+    CollisionBox->SetupAttachment(DoubleJumpArrowMesh);
+    CollisionBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f));
     CollisionBox->SetCollisionProfileName(TEXT("Trigger"));
 }
 
