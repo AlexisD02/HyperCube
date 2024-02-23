@@ -103,7 +103,6 @@ void UCustomCubeMovementComponent::Jump()
             {
                 if (!hasJumped)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Enetered double jump"));
                     CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, JumpForce));
                     hasJumped = true;
                 }
@@ -144,7 +143,16 @@ void UCustomCubeMovementComponent::GroundSlam()
         {
             if (CubeMesh)
             {
-                CubeMesh->SetPhysicsLinearVelocity(FVector(GroundSlamForce, 0.0f, 0.0f));
+                UE_LOG(LogTemp, Warning, TEXT("Enetered ground slam"));
+                CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, -GroundSlamForce));
+                //Cube->AddImpulse(FVector(GroundSlamForce, 0.0f, 0.0f));
+
+                //UBoxComponent* CollisionBox = CubeMesh->CollisionBox;
+                //if (CollisionBox)
+                //{
+                //    FVector SlamImpulse = FVector(0.f, 0.f, -10000.f); // Adjust the impulse strength as needed
+                //    CollisionBox->AddImpulse(SlamImpulse);
+                //}
             }
         }
     }

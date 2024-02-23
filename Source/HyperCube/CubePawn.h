@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "CustomCubeMovementComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 
 #include "CubePawn.generated.h"
 
@@ -23,7 +24,8 @@ public:
     UPROPERTY(VisibleAnywhere)
     UCustomCubeMovementComponent* CubeMovement;
 
-    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+        UBoxComponent* CollisionBox;
 
     void UpdateCameraPosition(float DeltaTime);
 

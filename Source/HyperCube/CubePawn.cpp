@@ -16,6 +16,11 @@ ACubePawn::ACubePawn()
     CubeMesh->SetSimulatePhysics(true);
     RootComponent = CubeMesh;
 
+    // Create a collision box component for ground detection
+    CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+    CollisionBox->SetupAttachment(RootComponent); // Attach the collision box to the root component
+    CollisionBox->SetCollisionProfileName(TEXT("Pawn")); // Set collision profile
+
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
     SpringArm->SetupAttachment(RootComponent);
     SpringArm->TargetArmLength = 800.0f;
