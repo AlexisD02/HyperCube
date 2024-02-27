@@ -31,6 +31,8 @@ public:
 
     void HandleMovement(float DeltaTime);
 
+    void DetachCamera();
+
 protected:
     virtual void Tick(float DeltaTime) override;
 

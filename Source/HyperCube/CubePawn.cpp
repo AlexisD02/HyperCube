@@ -72,3 +72,13 @@ void ACubePawn::HandleMovement(float DeltaTime)
     FVector NewLocation = GetActorLocation() + FVector(0.0f, CurrentSpeed * DeltaTime, 0.0f);
     SetActorLocation(NewLocation);
 }
+
+void ACubePawn::DetachCamera()
+{
+    // Check if the camera is valid
+    if (Camera) {
+        // Detach the camera from its parent component
+        Camera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+    }
+}
+

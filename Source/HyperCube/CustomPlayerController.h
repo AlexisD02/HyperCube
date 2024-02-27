@@ -37,6 +37,8 @@ public:
     void PauseMenu();
 
     void GameOverScreen();
+    
+    void WinScreen();
 
     // Reference to the pause menu widget class
     UPROPERTY(EditAnywhere)
@@ -46,13 +48,19 @@ public:
     UPROPERTY()
     UUserWidget* PauseMenuWidget;
 
-    // Reference to the pause menu widget class
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<UUserWidget> GameOverScreenWidgetClass;
 
-    //// The actual instance of the pause menu widget
     UPROPERTY()
     UUserWidget* GameOverScreenWidget;
+
+    // Reference to the pause menu widget class
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<UUserWidget> WinScreenWidgetClass;
+
+    //// The actual instance of the pause menu widget
+    UPROPERTY()
+    UUserWidget* WinScreenWidget;
 
 protected:
     virtual void BeginPlay() override;
