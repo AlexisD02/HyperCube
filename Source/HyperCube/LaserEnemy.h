@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-
 #include "LaserEnemy.generated.h"
 
 UCLASS()
@@ -31,13 +30,47 @@ private:
 	UPROPERTY(EditAnywhere)
 		float MovementSpeed = 100.0f;
 
-	UPROPERTY(EditAnywhere)
-		bool shouldPatrol = false;
+		//** Patrol
+		UFUNCTION()
+		void Patrol(float DeltaTime);
 
-	UPROPERTY(EditAnywhere)
-		float patrolDistance = 10.0f;
+		UPROPERTY(VisibleAnywhere)
+		bool bShouldInitiatePatrol = true;
 
+		UPROPERTY(EditAnywhere)
+		float PatrolDistance = 10.0f;
 
+		FTimerHandle PatrolTimer;
 
-	void Patrol();
+		UPROPERTY(EditAnywhere)
+		float PatrolDuration = 3.0f;
+
+		// Sets up the patrol by changing the direction of the enemy
+		UFUNCTION()
+		void InitiatePatrol();
+
+		// Function to run when the timer runs out. It makes bShouldPatrol to true 
+		UFUNCTION()
+		void EnablePatrol();
+
+		//** Laser Fire
+
+		// The raycast function that simulates the laser fire result
+		UFUNCTION()
+		void LaserFire();
+
+		UPROPERTY(VisibleAnywhere)
+		bool bCanFire = true;
+
+		FTimerHandle LaserTimer;
+
+		UPROPERTY(EditAnywhere)
+		float RPM = 3.0f;
+
+		UPROPERTY(EditAnywhere)
+		float LaserDistance = 1000.0f;
+
+		// Function to run when the timer runs out. It makes bCanFire to true 
+		UFUNCTION()
+		void EnableFire();
 };
