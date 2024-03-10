@@ -37,6 +37,7 @@ ACubePawn::ACubePawn()
 
     CubeMovement = CreateDefaultSubobject<UCustomCubeMovementComponent>(TEXT("CubeMovement"));
 
+    bCameraDetached = false;
 }
 
 void ACubePawn::Tick(float DeltaTime)
@@ -45,6 +46,13 @@ void ACubePawn::Tick(float DeltaTime)
 
     UpdateCameraPosition(DeltaTime);
     HandleMovement(DeltaTime);
+
+    if (bCameraDetached) {
+        // Calculate the forward vector based on the camera's rotation
+        FVector ForwardVector = Camera->GetForwardVector();
+        // Move the camera continuously backwards
+        Camera->AddLocalOffset(-ForwardVector * BackwardSpeed * DeltaTime);
+    }
 }
 
 void ACubePawn::UpdateCameraPosition(float DeltaTime)
@@ -79,6 +87,7 @@ void ACubePawn::DetachCamera()
     if (Camera) {
         // Detach the camera from its parent component
         Camera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+        bCameraDetached = true;
     }
 }
 

@@ -33,19 +33,25 @@ public:
 
     void DetachCamera();
 
+    UPROPERTY(VisibleAnywhere)
+    bool bCameraDetached;
+
 protected:
     virtual void Tick(float DeltaTime) override;
 
     // Speed at which the camera moves to its new position
-    UPROPERTY(EditAnywhere, Category = "Camera")
+    UPROPERTY(EditAnywhere)
     float CameraInterpSpeed = 2.0f;
 
     // Define the offset values for the camera
-    UPROPERTY(EditAnywhere, Category = "Camera")
+    UPROPERTY(EditAnywhere)
     float ForwardOffset = 330.0f; // Adjust as needed
 
-    UPROPERTY(EditAnywhere, Category = "Camera")
+    UPROPERTY(EditAnywhere)
     float BackwardOffset = -330.0f; // Adjust as needed
+
+    UPROPERTY(EditAnywhere)
+    float BackwardSpeed = 150.0f; // Adjust as needed
 
 private:
     UPROPERTY(VisibleAnywhere)

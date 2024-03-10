@@ -33,6 +33,10 @@ void AFinishLine::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
     if (CubePawn) {
         CubePawn->DetachCamera();
         // Trigger action after a delay
+        APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0); // Assuming player index 0
+        if (PlayerController) {
+            PlayerController->DisableInput(PlayerController);
+        }
         GetWorld()->GetTimerManager().SetTimer(DelayTimer, this, &AFinishLine::TriggerAction, 2.0f, false);
     }
 }
@@ -42,8 +46,7 @@ void AFinishLine::TriggerAction()
 {
     // Attempt to cast to CustomPlayerController
     APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-    if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController))
-    {
+    if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
         // Call WinScreen function if accessible
         CustomController->WinScreen();
     }
