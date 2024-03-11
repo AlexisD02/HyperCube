@@ -35,7 +35,7 @@ void ASpikeActor::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImp
 {
 	UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Something."));
 
-	if (OtherActor->GetClass()->IsChildOf(ACubePawn::StaticClass()))
+	if (OtherActor && OtherActor->GetClass()->IsChildOf(ACubePawn::StaticClass()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Cuber!"));
 

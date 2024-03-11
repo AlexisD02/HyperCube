@@ -64,8 +64,7 @@ void ACustomPlayerController::CallDash()
 
 void ACustomPlayerController::CallGroundSlam()
 {
-    if (CubePawn) 
-    {
+    if (CubePawn)  {
         // Call the pawn's ground slam function
         CubePawn->CubeMovement->GroundSlam();
     }
@@ -73,14 +72,12 @@ void ACustomPlayerController::CallGroundSlam()
 
 void ACustomPlayerController::PauseMenu()
 {
-    if (!PauseMenuWidget && PauseMenuWidgetClass)
-    {
+    if (!PauseMenuWidget && PauseMenuWidgetClass) {
         // Create the pause menu widget if it doesn't exist
         PauseMenuWidget = CreateWidget(this, PauseMenuWidgetClass);
     }
 
-    if (PauseMenuWidget)
-    {
+    if (PauseMenuWidget) {
         // Add the widget to the viewport and pause the game
         PauseMenuWidget->AddToViewport();
         SetInputMode(FInputModeUIOnly());
@@ -91,16 +88,30 @@ void ACustomPlayerController::PauseMenu()
 
 void ACustomPlayerController::GameOverScreen()
 {
-    if (!GameOverScreenWidget && GameOverScreenWidgetClass)
-    {
+    if (!GameOverScreenWidget && GameOverScreenWidgetClass) {
         // Create the pause menu widget if it doesn't exist
         GameOverScreenWidget = CreateWidget(this, GameOverScreenWidgetClass);
     }
 
-    if (GameOverScreenWidget)
-    {
+    if (GameOverScreenWidget) {
         // Add the widget to the viewport and pause the game
         GameOverScreenWidget->AddToViewport();
+        SetInputMode(FInputModeUIOnly());
+        bShowMouseCursor = true;
+        SetPause(true);
+    }
+}
+
+void ACustomPlayerController::WinScreen()
+{
+    if (!WinScreenWidget && WinScreenWidgetClass) {
+        // Create the pause menu widget if it doesn't exist
+        WinScreenWidget = CreateWidget(this, WinScreenWidgetClass);
+    }
+
+    if (WinScreenWidget) {
+        // Add the widget to the viewport and pause the game
+        WinScreenWidget->AddToViewport();
         SetInputMode(FInputModeUIOnly());
         bShowMouseCursor = true;
         SetPause(true);
