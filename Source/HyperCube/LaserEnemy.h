@@ -34,7 +34,12 @@ private:
 		UFUNCTION()
 		void Patrol(float DeltaTime);
 
-		UPROPERTY(VisibleAnywhere)
+		// Can be toogled true or false, so you can choose if the enemy can patrol or not.
+		UPROPERTY(EditAnywhere)
+		bool bCanPatrol = true;
+
+		// Is used for the patrol to work. Do NOT change.
+		UPROPERTY()
 		bool bShouldInitiatePatrol = true;
 
 		UPROPERTY(EditAnywhere)
@@ -59,7 +64,12 @@ private:
 		UFUNCTION()
 		void LaserFire();
 
-		UPROPERTY(VisibleAnywhere)
+		// Can be toogled true or false, so you can choose if the enemy can fire or not.
+		UPROPERTY(EditAnywhere)
+		bool bShouldFire = true;
+
+		// Is used for the fire to work. Do NOT change.
+		UPROPERTY()
 		bool bCanFire = true;
 
 		FTimerHandle LaserTimer;

@@ -30,8 +30,8 @@ void ALaserEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bCanFire) LaserFire();
-	if (bShouldInitiatePatrol) InitiatePatrol();
+	if (bShouldFire) if (bCanFire) LaserFire();
+	if (bCanPatrol) if (bShouldInitiatePatrol) InitiatePatrol();
 	if (!bShouldInitiatePatrol) Patrol(DeltaTime);
 }
 
@@ -42,7 +42,7 @@ void ALaserEnemy::LaserFire()
 
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParams;
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 25.0f, 25.0f, 25.0f);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, true, 0.5f, 0.0f, 25.0f);
 	CollisionParams.AddIgnoredActor(GetOwner()); // Ignore the cube itself
 
 	// Perform the raycast
