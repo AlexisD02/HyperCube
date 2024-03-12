@@ -40,13 +40,21 @@ public:
     
     void WinScreen();
 
-    // Reference to the pause menu widget class
-    UPROPERTY(EditAnywhere)
+    UFUNCTION()
+    void F_MainGameWidget();
+
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<UUserWidget> MainGameWidgetClass;
+
+    UPROPERTY()
+    UUserWidget* MainGameWidget;
+
+    UPROPERTY(EditDefaultsOnly)
     TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 
-    //// The actual instance of the pause menu widget
     UPROPERTY()
     UUserWidget* PauseMenuWidget;
+
 
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<UUserWidget> GameOverScreenWidgetClass;

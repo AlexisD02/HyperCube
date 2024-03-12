@@ -14,4 +14,16 @@ class HYPERCUBE_API AHyperCubeGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void PointScored();
+
+	UFUNCTION(BlueprintPure)
+	int GetPointScored();
+
+private:
+	UPROPERTY()
+	int pointsScored = 0;
 };

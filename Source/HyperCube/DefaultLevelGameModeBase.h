@@ -7,7 +7,7 @@
 #include "DefaultLevelGameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class HYPERCUBE_API ADefaultLevelGameModeBase : public AGameModeBase
@@ -15,5 +15,16 @@ class HYPERCUBE_API ADefaultLevelGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void PointScored();
+
+	UFUNCTION(BlueprintCallable)
+	int GetPointScored();
+
+private:
+	UPROPERTY()
+	int pointsScored = 0;
 };
+
