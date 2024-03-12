@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "LaserEnemy.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class HYPERCUBE_API ALaserEnemy : public AActor
 {
@@ -23,9 +25,29 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Collision box to detect when the player can damage the enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* TakeDamageBox;
+
+	// Collision box to detect when the player can get damaged by the enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* DealDamageBox;
+
+	UFUNCTION()
+	void DealDamageToPlayerEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void TakeDamageEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 private:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* LaserEnemyMesh;
+
+		virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+			AController* EventInstigator, AActor* DamageCauser) override;
+
+		UPROPERTY(EditAnywhere)
+		float Health = 1.0f;
 
 	UPROPERTY(EditAnywhere)
 		float MovementSpeed = 100.0f;
@@ -67,6 +89,9 @@ private:
 		// Can be toogled true or false, so you can choose if the enemy can fire or not.
 		UPROPERTY(EditAnywhere)
 		bool bShouldFire = true;
+
+		UPROPERTY(EditAnywhere)
+		bool bShouldFireAtPlayer = false;
 
 		// Is used for the fire to work. Do NOT change.
 		UPROPERTY()
