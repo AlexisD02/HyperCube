@@ -39,7 +39,7 @@ public:
 private:
 
 	UPROPERTY()
-	class ADefaultLevelGameModeBase* GameModeRef;
+	class AHyperCubeGameModeBase* GameModeRef;
 
 
 

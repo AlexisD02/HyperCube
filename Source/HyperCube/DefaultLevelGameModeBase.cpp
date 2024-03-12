@@ -11,7 +11,11 @@ void ADefaultLevelGameModeBase::BeginPlay()
 
 void ADefaultLevelGameModeBase::PointScored()
 {
-
-	pointsScored += 1.0f;
+	pointsScored++;
 	UE_LOG(LogTemp, Warning, TEXT("Points: %f"), pointsScored);
+}
+
+int ADefaultLevelGameModeBase::GetPointScored()
+{
+	return pointsScored;
 }

@@ -13,6 +13,8 @@ void ACustomPlayerController::BeginPlay()
 
     // Initialize MyPawn
     CubePawn = Cast<ACubePawn>(GetPawn());
+
+    F_MainGameWidget();
 }
 
 void ACustomPlayerController::SetupInputComponent()
@@ -69,6 +71,17 @@ void ACustomPlayerController::CallGroundSlam()
         CubePawn->CubeMovement->GroundSlam();
     }
 }
+
+void ACustomPlayerController::F_MainGameWidget()
+{
+    if (MainGameWidgetClass) {
+        MainGameWidget = CreateWidget(this, MainGameWidgetClass);
+        if (MainGameWidget) {
+            MainGameWidget->AddToViewport();
+        }
+    }
+}
+
 
 void ACustomPlayerController::PauseMenu()
 {
