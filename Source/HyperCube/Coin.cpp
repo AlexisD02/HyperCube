@@ -3,7 +3,7 @@
 
 #include "Coin.h"
 #include "CubePawn.h"
-#include "DefaultLevelGameModeBase.h"
+#include "HyperCubeGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
 
@@ -21,9 +21,6 @@ ACoin::ACoin()
 	Collisionbox->SetupAttachment(CoinMesh);
 	Collisionbox->SetBoxExtent(FVector(40.0f, 70.0f, 10.0f));
 	Collisionbox->SetCollisionProfileName("Trigger");
-
-
-
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +29,7 @@ void ACoin::BeginPlay()
 	Super::BeginPlay();
 
 	Collisionbox->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnOverlapBegin);
-	GameModeRef = Cast<ADefaultLevelGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	GameModeRef = Cast<AHyperCubeGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 }
 

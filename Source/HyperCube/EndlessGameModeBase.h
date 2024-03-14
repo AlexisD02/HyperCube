@@ -4,27 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "DefaultLevelGameModeBase.generated.h"
+#include "EndlessGameModeBase.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class HYPERCUBE_API ADefaultLevelGameModeBase : public AGameModeBase
+class HYPERCUBE_API AEndlessGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-
+	
 public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void PointScored();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	int GetPointScored();
 
 private:
 	UPROPERTY()
 	int pointsScored = 0;
 };
-

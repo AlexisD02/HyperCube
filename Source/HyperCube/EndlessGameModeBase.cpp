@@ -1,21 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DefaultLevelGameModeBase.h"
+#include "EndlessGameModeBase.h"
 
-void ADefaultLevelGameModeBase::BeginPlay()
+void AEndlessGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Default"));
 }
 
-void ADefaultLevelGameModeBase::PointScored()
+void AEndlessGameModeBase::PointScored()
 {
 	pointsScored++;
 	UE_LOG(LogTemp, Warning, TEXT("Points: %f"), pointsScored);
 }
 
-int ADefaultLevelGameModeBase::GetPointScored()
+int AEndlessGameModeBase::GetPointScored()
 {
 	return pointsScored;
 }
