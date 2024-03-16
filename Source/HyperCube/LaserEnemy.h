@@ -99,8 +99,17 @@ private:
 
 		FTimerHandle LaserTimer;
 
+		FTimerHandle LaserLineTimer;
+
 		UPROPERTY(EditAnywhere)
-		float RPM = 3.0f;
+		float RPM = 5.0f;
+
+		UPROPERTY(EditAnywhere)
+		float laserDuration = 1.0f;
+
+		// Function to run when the timer runs out. It makes bCanFire to true 
+		UFUNCTION()
+		void RemoveLaser();
 
 		UPROPERTY(EditAnywhere)
 		float LaserDistance = 1000.0f;
@@ -108,4 +117,8 @@ private:
 		// Function to run when the timer runs out. It makes bCanFire to true 
 		UFUNCTION()
 		void EnableFire();
+
+		// Static mesh component to represent the laser
+		UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* LaserLineMesh;
 };

@@ -4,7 +4,9 @@
 #include "LaserEnemy.h"
 #include "CollisionQueryParams.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "CubePawn.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "CustomPlayerController.h"
 
 // Sets default values
@@ -26,6 +28,11 @@ ALaserEnemy::ALaserEnemy()
 	DealDamageBox->SetupAttachment(LaserEnemyMesh);
 	//TakeDamageBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f));
 	DealDamageBox->SetCollisionProfileName(TEXT("Trigger"));
+
+	LaserLineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserLineMesh"));
+	LaserLineMesh->SetupAttachment(LaserEnemyMesh);
+	LaserLineMesh->SetVisibility(false); // Initially invisible
+	LaserLineMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +43,8 @@ void ALaserEnemy::BeginPlay()
 	// Register Events
 	DealDamageBox->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::DealDamageToPlayerEvent);
 	TakeDamageBox->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::TakeDamageEvent);
+
+	GetWorld()->GetTimerManager().SetTimer(LaserTimer, this, &ALaserEnemy::LaserFire, RPM, true);
 }
 
 // Called every frame
@@ -43,53 +52,54 @@ void ALaserEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bShouldFire) if (bCanFire) LaserFire();
+	//if (bShouldFire) if (bCanFire) LaserFire();
+
 	if (bCanPatrol) if (bShouldInitiatePatrol) InitiatePatrol();
 	if (!bShouldInitiatePatrol) Patrol(DeltaTime);
 }
 
 void ALaserEnemy::LaserFire()
 {
-	// Attempt to cast to CustomPlayerController
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	
+	// Calculate the start and end locations for the line trace
 	FVector Start = GetActorLocation();
-
-	FVector End;
-	if (bShouldFireAtPlayer) if (PlayerController) if (auto const Player = PlayerController->GetPawn()) End = Start - Player->GetActorLocation();
-	else End = Start - FVector(0.0f, -LaserDistance, 0.0f);
+	if (!GetWorld()->GetFirstPlayerController()->GetPawn()) return; // Ensure there's a player pawn
+	FVector PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(); // Get player's location
+	FVector DirectionToPlayer = (PlayerLocation - Start).GetSafeNormal(); // Direction vector from enemy to player
+	FVector End = Start + (DirectionToPlayer * 1000.0f);
 
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParams;
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, true, 0.1f, 0.0f, 35.0f);
-	CollisionParams.AddIgnoredActor(GetOwner()); // Ignore the cube itself
+	CollisionParams.AddIgnoredActor(this); // Ignore the shooter
 
-	// Perform the raycast
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams);
+	LaserLineMesh->SetWorldLocation(Start);
+	LaserLineMesh->SetWorldRotation(DirectionToPlayer.Rotation() + FRotator(-90.0f, 0.0f, 0.0f));
+	LaserLineMesh->SetVisibility(true);
 
-	// Log the result
-	UE_LOG(LogTemp, Warning, TEXT("Laser has hit: %s"), bHit ? TEXT("True") : TEXT("False"));
+	GetWorld()->GetTimerManager().SetTimer(LaserLineTimer, this, &ALaserEnemy::RemoveLaser, laserDuration, false);
 
-	if (bHit)  // The enemy hit something
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
 	{
-		if (HitResult.GetActor())  // The target the enemy hit is not null
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit Something: %f"), *HitResult.GetActor()->GetName());
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor) {
+			// Cast the hit actor to CubePawn
+			ACubePawn* HitPawn = Cast<ACubePawn>(HitActor);
+			if (HitPawn) { // If the cast is successful, it means the hit actor is a CubePawn
+				HitPawn->Destroy();
 
-			if (HitResult.GetActor()->GetClass()->IsChildOf(ACubePawn::StaticClass()))  // If the target was the player
-			{
-				if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController))
-				{
-					// Call GameOverScreen function if accessible
+				// TODO: TO BE REMOVED
+				APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+				if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
+					// Call WinScreen function if accessible
 					CustomController->GameOverScreen();
-					HitResult.GetActor()->Destroy();
 				}
 			}
 		}
 	}
+}
 
-	GetWorld()->GetTimerManager().SetTimer(LaserTimer, this, &ALaserEnemy::EnableFire, RPM, false);
-	bCanFire = false;
+void ALaserEnemy::RemoveLaser()
+{
+	LaserLineMesh->SetVisibility(false);
 }
 
 void ALaserEnemy::EnableFire()
