@@ -7,6 +7,7 @@
 #include "LaserEnemy.generated.h"
 
 class UBoxComponent;
+class ABossGameModeBase;
 
 UCLASS()
 class HYPERCUBE_API ALaserEnemy : public AActor
@@ -31,10 +32,15 @@ public:
 
 	// Collision box to detect when the player can get damaged by the enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UBoxComponent* DealDamageBox;
+	UBoxComponent* DealDamageBoxLeft;
+	// Collision box to detect when the player can get damaged by the enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* DealDamageBoxRight;
 
 	UFUNCTION()
-	void DealDamageToPlayerEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void DealDamageToPlayerEventLeft(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void DealDamageToPlayerEventRight(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	void TakeDamageEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -47,7 +53,7 @@ private:
 			AController* EventInstigator, AActor* DamageCauser) override;
 
 		UPROPERTY(EditAnywhere)
-		float Health = 1.0f;
+		int Health = 1;
 
 	UPROPERTY(EditAnywhere)
 		float MovementSpeed = 100.0f;
@@ -121,4 +127,11 @@ private:
 		// Static mesh component to represent the laser
 		UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* LaserLineMesh;
+
+		UFUNCTION(BlueprintPure)
+		int GetHealth();
+		//**
+
+		UPROPERTY()
+		ABossGameModeBase* GameModeRef;
 };

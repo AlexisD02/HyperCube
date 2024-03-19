@@ -8,6 +8,7 @@
 #include "CubePawn.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "CustomPlayerController.h"
+#include "BossGameModeBase.h"
 
 // Sets default values
 ALaserEnemy::ALaserEnemy()
@@ -24,10 +25,13 @@ ALaserEnemy::ALaserEnemy()
 	//TakeDamageBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f));
 	TakeDamageBox->SetCollisionProfileName(TEXT("Trigger"));
 
-	DealDamageBox = CreateDefaultSubobject<UBoxComponent>(TEXT("DealDamageBox"));
-	DealDamageBox->SetupAttachment(LaserEnemyMesh);
-	//TakeDamageBox->SetBoxExtent(FVector(100.0f, 100.0f, 150.0f));
-	DealDamageBox->SetCollisionProfileName(TEXT("Trigger"));
+	DealDamageBoxLeft = CreateDefaultSubobject<UBoxComponent>(TEXT("DealDamageBoxLeft"));
+	DealDamageBoxLeft->SetupAttachment(LaserEnemyMesh);
+	DealDamageBoxLeft->SetCollisionProfileName(TEXT("Trigger"));
+
+	DealDamageBoxRight = CreateDefaultSubobject<UBoxComponent>(TEXT("DealDamageBoxRight"));
+	DealDamageBoxRight->SetupAttachment(LaserEnemyMesh);
+	DealDamageBoxRight->SetCollisionProfileName(TEXT("Trigger"));
 
 	LaserLineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserLineMesh"));
 	LaserLineMesh->SetupAttachment(LaserEnemyMesh);
@@ -39,9 +43,13 @@ ALaserEnemy::ALaserEnemy()
 void ALaserEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Get a reference to the boss gamemode base
+	GameModeRef = Cast<ABossGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
 	// Register Events
-	DealDamageBox->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::DealDamageToPlayerEvent);
+	DealDamageBoxLeft->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::DealDamageToPlayerEventLeft);
+	DealDamageBoxRight->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::DealDamageToPlayerEventRight);
 	TakeDamageBox->OnComponentBeginOverlap.AddDynamic(this, &ALaserEnemy::TakeDamageEvent);
 
 	GetWorld()->GetTimerManager().SetTimer(LaserTimer, this, &ALaserEnemy::LaserFire, RPM, true);
@@ -84,13 +92,20 @@ void ALaserEnemy::LaserFire()
 			// Cast the hit actor to CubePawn
 			ACubePawn* HitPawn = Cast<ACubePawn>(HitActor);
 			if (HitPawn) { // If the cast is successful, it means the hit actor is a CubePawn
-				HitPawn->Destroy();
+				if (GameModeRef)
+				{
+					GameModeRef->RemoveHealth(1);
 
-				// TODO: TO BE REMOVED
-				APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-				if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
-					// Call WinScreen function if accessible
-					CustomController->GameOverScreen();
+					if (GameModeRef->GetHealth() <= 0)
+					{
+						HitPawn->Destroy();
+
+						APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+						if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
+							// Call WinScreen function if accessible
+							CustomController->GameOverScreen();
+						}
+					}
 				}
 			}
 		}
@@ -137,7 +152,7 @@ float ALaserEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& Dam
 }
 
 // Functions to run when the corisponding collision boxes overlap with the player
-void ALaserEnemy::DealDamageToPlayerEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ALaserEnemy::DealDamageToPlayerEventLeft(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
 	{
@@ -145,9 +160,58 @@ void ALaserEnemy::DealDamageToPlayerEvent(UPrimitiveComponent* OverlappedComp, A
 		{
 			if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(Player->GetRootComponent()))
 			{
-				CubeMesh->SetPhysicsLinearVelocity(FVector(1000.0f, 1000.0f, 1000.0f));
+				CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, -3000.0f, 0.0f));
 
 				UE_LOG(LogTemp, Warning, TEXT("Enemy colided with player (Deal damage)!!!"));
+
+				if (GameModeRef)
+				{
+					GameModeRef->RemoveHealth(1);
+
+					if (GameModeRef->GetHealth() <= 0)
+					{
+						Player->Destroy();
+
+						//APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+						if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
+							// Call WinScreen function if accessible
+							CustomController->GameOverScreen();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Functions to run when the corisponding collision boxes overlap with the player
+void ALaserEnemy::DealDamageToPlayerEventRight(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		if (auto* const Player = PlayerController->GetPawn())
+		{
+			if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(Player->GetRootComponent()))
+			{
+				CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 3000.0f, 0.0f));
+
+				UE_LOG(LogTemp, Warning, TEXT("Enemy colided with player (Deal damage)!!!"));
+
+				if (GameModeRef)
+				{
+					GameModeRef->RemoveHealth(1);
+
+					if (GameModeRef->GetHealth() <= 0)
+					{
+						Player->Destroy();
+
+						//APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+						if (ACustomPlayerController* CustomController = Cast<ACustomPlayerController>(PlayerController)) {
+							// Call WinScreen function if accessible
+							CustomController->GameOverScreen();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -157,5 +221,24 @@ void ALaserEnemy::TakeDamageEvent(UPrimitiveComponent* OverlappedComp, AActor* O
 {
 	Health--;
 
-	if (Health < 0) Destroy();
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		if (auto* const Player = PlayerController->GetPawn())
+		{
+			if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(Player->GetRootComponent()))
+			{
+				CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, 2000.0f));
+
+				UE_LOG(LogTemp, Warning, TEXT("Bounce PLAYER!!!"));
+			}
+		}
+	}
+
+	if (Health <= 0) Destroy();
+}
+
+// Value that appears on screen for Health
+int ALaserEnemy::GetHealth()
+{
+	return Health;
 }
