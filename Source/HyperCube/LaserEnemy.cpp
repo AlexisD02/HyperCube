@@ -146,7 +146,10 @@ float ALaserEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& Dam
 {
 	UE_LOG(LogTemp, Warning, TEXT("Enemy took some damage!!!"));
 
-	Health -= DamageAmount;
+	ABossGameModeBase* MyGameMode = Cast<ABossGameModeBase>(GetWorld());
+	if (MyGameMode) {
+		MyGameMode->RemoveBossHealth(1);
+	}
 
 	return DamageAmount;
 }
@@ -219,26 +222,24 @@ void ALaserEnemy::DealDamageToPlayerEventRight(UPrimitiveComponent* OverlappedCo
 
 void ALaserEnemy::TakeDamageEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Health--;
+	ABossGameModeBase* MyGameMode = Cast<ABossGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (MyGameMode && MyGameMode->GetBossHealth() > 0) {
+		MyGameMode->RemoveBossHealth(1);
 
-	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
-	{
-		if (auto* const Player = PlayerController->GetPawn())
+		if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
 		{
-			if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(Player->GetRootComponent()))
+			if (auto* const Player = PlayerController->GetPawn())
 			{
-				CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, 2000.0f));
+				if (UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(Player->GetRootComponent()))
+				{
+					CubeMesh->SetPhysicsLinearVelocity(FVector(0.0f, 0.0f, 2000.0f));
 
-				UE_LOG(LogTemp, Warning, TEXT("Bounce PLAYER!!!"));
+					UE_LOG(LogTemp, Warning, TEXT("Bounce PLAYER!!!"));
+				}
 			}
 		}
 	}
-
-	if (Health <= 0) Destroy();
-}
-
-// Value that appears on screen for Health
-int ALaserEnemy::GetHealth()
-{
-	return Health;
+	else {
+		Destroy();
+	}
 }

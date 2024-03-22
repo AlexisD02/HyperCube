@@ -45,15 +45,14 @@ public:
 	UFUNCTION()
 	void TakeDamageEvent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+
+
 private:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* LaserEnemyMesh;
 
 		virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 			AController* EventInstigator, AActor* DamageCauser) override;
-
-		UPROPERTY(EditAnywhere)
-		int Health = 1;
 
 	UPROPERTY(EditAnywhere)
 		float MovementSpeed = 100.0f;
@@ -128,8 +127,6 @@ private:
 		UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* LaserLineMesh;
 
-		UFUNCTION(BlueprintPure)
-		int GetHealth();
 		//**
 
 		UPROPERTY()

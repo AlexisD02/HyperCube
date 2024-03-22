@@ -14,17 +14,39 @@ class HYPERCUBE_API ABossGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	ABossGameModeBase();
+
 private:
+	UPROPERTY(EditAnywhere)
+	int MaxHealth = 3;
+
 	// Health of cube
 	UPROPERTY(EditAnywhere)
-	int Health = 3;
+	int Health;
+	
+	UPROPERTY(EditAnywhere)
+	int BossMaxHealth = 1;
+
+	UPROPERTY(EditAnywhere)
+	int BossHealth;
 
 public:
 	void RemoveHealth(int amount);
 
 	void AddHealth(int amount);
 
+	void RemoveBossHealth(int amount);
+
+	UFUNCTION(BlueprintCallable)
+	int GetMaxHealth();
+
+	UFUNCTION(BlueprintCallable)
 	int GetHealth();
 
-	
+	UFUNCTION(BlueprintCallable)
+	int GetBossMaxHealth();
+
+	UFUNCTION(BlueprintCallable)
+	int GetBossHealth();
 };
