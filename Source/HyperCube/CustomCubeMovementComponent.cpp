@@ -112,8 +112,6 @@ void UCustomCubeMovementComponent::Jump()
 }
 
 
-
-
 void UCustomCubeMovementComponent::Dash()
 {
     if (bCanDash)  // Check if we have the dash power up
