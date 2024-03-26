@@ -26,7 +26,7 @@ private:
 	int Health;
 	
 	UPROPERTY(EditAnywhere)
-	int BossMaxHealth = 1;
+	int BossMaxHealth = 3;
 
 	UPROPERTY(EditAnywhere)
 	int BossHealth;
