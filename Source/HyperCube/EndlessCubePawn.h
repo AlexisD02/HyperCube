@@ -11,23 +11,21 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 
-#include "CubePawn.generated.h"
+#include "EndlessCubePawn.generated.h"
 
 UCLASS()
-class HYPERCUBE_API ACubePawn : public APawn
+class HYPERCUBE_API AEndlessCubePawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
-    ACubePawn();
+    AEndlessCubePawn();
 
     UPROPERTY(VisibleAnywhere)
     UCustomCubeMovementComponent* CubeMovement;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-        UBoxComponent* CollisionBox;
-
-    void UpdateCameraPosition(float DeltaTime);
+    UBoxComponent* CollisionBox;
 
     void HandleMovement(float DeltaTime);
 
@@ -37,7 +35,7 @@ public:
     bool bCameraDetached;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-    float CurrentSpeed = 0.0f;
+    float CurrentSpeed = 600.0f;
 
 protected:
     virtual void Tick(float DeltaTime) override;
@@ -48,10 +46,7 @@ protected:
 
     // Define the offset values for the camera
     UPROPERTY(EditAnywhere)
-    float ForwardOffset = 330.0f; // Adjust as needed
-
-    UPROPERTY(EditAnywhere)
-    float BackwardOffset = -330.0f; // Adjust as needed
+    float SocketOffset = 350.0f; // Adjust as needed
 
     UPROPERTY(EditAnywhere)
     float BackwardSpeed = 150.0f; // Adjust as needed
@@ -71,3 +66,4 @@ private:
     float JumpForce = 400.0f;
 
 };
+
