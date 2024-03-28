@@ -68,15 +68,15 @@ public:
     UPROPERTY(VisibleAnywhere)
     bool bHasDashed = false;
 
-
-private:
     // Speed properties
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float NormalSpeed = 700.0f;
 
     // Current movement speed
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float CurrentSpeed = 0.0f;
 
+private:
     // Jump force
     UPROPERTY(EditAnywhere)
     float JumpForce = 1300.0f;

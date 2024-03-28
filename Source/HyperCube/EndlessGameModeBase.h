@@ -23,7 +23,37 @@ public:
 	UFUNCTION(BlueprintPure)
 	int GetPointScored();
 
+	UFUNCTION()
+	void IncreaseScore();
+
+	UFUNCTION(BlueprintPure)
+	FString GetScore();
+
+	UPROPERTY(EditAnywhere)
+	int score = 0;
+
+	UFUNCTION(BlueprintPure)
+	FString GetPlaytime();
+
 private:
 	UPROPERTY()
 	int pointsScored = 0;
+
+	UPROPERTY(EditAnywhere)
+	float ScoreIncreaseInterval = 0.1f; // Default score increase interval (1 second)
+
+	// Timer handle for score increase
+	FTimerHandle ScoreIncreaseTimerHandle;
+
+	// Playtime variables
+	UPROPERTY(EditAnywhere)
+	float Playtime = 0.0f;
+
+	FTimerHandle PlaytimeUpdateTimerHandle;
+
+	UPROPERTY(EditAnywhere)
+	float TimerUpdate = 1.0f;
+
+	UFUNCTION()
+	void UpdatePlaytime();
 };
