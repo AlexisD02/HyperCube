@@ -23,7 +23,22 @@ public:
 	UFUNCTION(BlueprintPure)
 	int GetPointScored();
 
-private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	int pointsScored = 0;
+
+	UFUNCTION(BlueprintPure)
+	FString GetPlaytime();
+
+private:
+	// Playtime variables
+	UPROPERTY(EditAnywhere)
+	float Playtime = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+	float TimerUpdate = 1.0f;
+
+	FTimerHandle PlaytimeUpdateTimerHandle;
+
+	UFUNCTION()
+	void UpdatePlaytime();
 };

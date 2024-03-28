@@ -17,10 +17,10 @@ ACoin::ACoin()
 	CoinMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Coin"));
 	CoinMesh->SetupAttachment(RootComponent);
 
-	Collisionbox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
-	Collisionbox->SetupAttachment(CoinMesh);
-	Collisionbox->SetBoxExtent(FVector(40.0f, 70.0f, 10.0f));
-	Collisionbox->SetCollisionProfileName("Trigger");
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
+	CollisionBox->SetupAttachment(CoinMesh);
+	CollisionBox->SetBoxExtent(FVector(40.0f, 70.0f, 10.0f));
+	CollisionBox->SetCollisionProfileName("Trigger");
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +28,7 @@ void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Collisionbox->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnOverlapBegin);
+	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnOverlapBegin);
 	GameModeRef = Cast<AHyperCubeGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 }
@@ -37,6 +37,9 @@ void ACoin::BeginPlay()
 void ACoin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Rotate the actor
+	AddActorLocalRotation(FRotator(0.f, RotationSpeed * DeltaTime, 0.f));
 
 	FVector NewLocation = GetActorLocation();
 	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));

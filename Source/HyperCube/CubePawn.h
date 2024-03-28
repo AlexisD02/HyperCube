@@ -21,6 +21,11 @@ class HYPERCUBE_API ACubePawn : public APawn
 public:
     ACubePawn();
 
+protected:
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+
+public:
     UPROPERTY(VisibleAnywhere)
     UCustomCubeMovementComponent* CubeMovement;
 
@@ -56,6 +61,9 @@ protected:
     UPROPERTY(EditAnywhere)
     float BackwardSpeed = 150.0f; // Adjust as needed
 
+    UPROPERTY(EditAnywhere)
+    float FallIntensity = 980.0f;
+
 private:
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* CubeMesh;
@@ -70,4 +78,9 @@ private:
     UPROPERTY(EditAnywhere)
     float JumpForce = 400.0f;
 
+    bool bIsSideCollision;
+
+    // New function to handle side collision
+    UFUNCTION()
+    void OnSideCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

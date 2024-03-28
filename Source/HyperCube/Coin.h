@@ -30,18 +30,19 @@ public:
 	UStaticMeshComponent* CoinMesh;
 
 	UPROPERTY(EditAnywhere)
-	class UBoxComponent* Collisionbox;
+	class UBoxComponent* CollisionBox;
 
 	UPROPERTY()
 	ACubePawn* CubePawn;
 
 
 private:
-
 	UPROPERTY()
 	class AHyperCubeGameModeBase* GameModeRef;
 
-
+	// Speed of rotation (degrees per second)
+	UPROPERTY(EditAnywhere)
+	float RotationSpeed = 90.0f;
 
 	UPROPERTY(EditAnywhere)
 	float FloatSpeed = 20.0f;

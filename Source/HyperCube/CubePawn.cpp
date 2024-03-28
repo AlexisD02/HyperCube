@@ -14,6 +14,7 @@ ACubePawn::ACubePawn()
 
     CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
     CubeMesh->SetSimulatePhysics(true);
+    CubeMesh->BodyInstance.SetUseCCD(true); // Enable CCD
     RootComponent = CubeMesh;
 
     // Create a collision box component for ground detection
@@ -38,6 +39,15 @@ ACubePawn::ACubePawn()
     CubeMovement = CreateDefaultSubobject<UCustomCubeMovementComponent>(TEXT("CubeMovement"));
 
     bCameraDetached = false;
+    bIsSideCollision = false;
+}
+
+void ACubePawn::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // Setup collision callback for the CubeMesh
+    CollisionBox->OnComponentHit.AddDynamic(this, &ACubePawn::OnSideCollision);
 }
 
 void ACubePawn::Tick(float DeltaTime)
@@ -45,13 +55,44 @@ void ACubePawn::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     UpdateCameraPosition(DeltaTime);
-    HandleMovement(DeltaTime);
+
+    if (!bIsSideCollision) { // Only handle movement if there's no side collision
+        HandleMovement(DeltaTime);
+    }
 
     if (bCameraDetached) {
         // Calculate the forward vector based on the camera's rotation
         FVector ForwardVector = Camera->GetForwardVector();
         // Move the camera continuously backwards
         Camera->AddLocalOffset(-ForwardVector * BackwardSpeed * DeltaTime);
+    }
+}
+
+void ACubePawn::OnSideCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+    FVector Start = GetActorLocation();
+
+    // Tracing to the right and left as before
+    FVector EndRight = Start + FVector(0.0f, 100.0f, 0.0f);
+    FVector EndLeft = Start - FVector(0.0f, 100.0f, 0.0f);
+
+    // Additional trace directly downwards
+    FVector EndDown = Start - FVector(0.0f, 0.0f, 100.0f); // Adjust the Z value as necessary for your game's scale
+
+    FHitResult LineTraceHitRight, LineTraceHitLeft, LineTraceHitDown;
+    FCollisionQueryParams QueryParams(TEXT("SideCollisionTrace"), true, this);
+
+    // Perform the line traces
+    bool bHitRight = GetWorld()->LineTraceSingleByChannel(LineTraceHitRight, Start, EndRight, ECC_Visibility, QueryParams);
+    bool bHitLeft = GetWorld()->LineTraceSingleByChannel(LineTraceHitLeft, Start, EndLeft, ECC_Visibility, QueryParams);
+    bool bHitDown = GetWorld()->LineTraceSingleByChannel(LineTraceHitDown, Start, EndDown, ECC_Visibility, QueryParams);
+
+    // If there's a hit on either side, but not downwards (indicating falling), reset side collision
+    if ((bHitRight || bHitLeft) && !bHitDown) {
+        bIsSideCollision = true;
+    }
+    else {
+        bIsSideCollision = false; // No side collision or the pawn is falling
     }
 }
 
