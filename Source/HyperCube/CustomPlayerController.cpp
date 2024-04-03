@@ -35,6 +35,9 @@ void ACustomPlayerController::SetupInputComponent()
     // Bind Jump action
     InputComponent->BindAction("GroundSlam", IE_Pressed, this, &ACustomPlayerController::CallGroundSlam);
 
+    // Bind Shrink action
+    InputComponent->BindAction("Shrink", IE_Pressed, this, &ACustomPlayerController::CallShrink);
+
     InputComponent->BindAction("Pause", IE_Pressed, this, &ACustomPlayerController::PauseMenu);
 }
 
@@ -53,6 +56,14 @@ void ACustomPlayerController::CallJump()
     if (CubePawn) {
         // Call the pawn's jump function
         CubePawn->CubeMovement->Jump();
+    }
+}
+
+void ACustomPlayerController::CallShrink()
+{
+    if (CubePawn) {
+        // Call the pawn's jump function
+        CubePawn->CubeMovement->Shrink();
     }
 }
 

@@ -35,6 +35,8 @@ public:
 
     void GroundSlam();
 
+    void Shrink();
+
     float GetCurrentSpeed();
 
     bool IsGrounded();
@@ -51,6 +53,10 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         bool bCanGroundSlam;
 
+    // When you get the power-up, this becomes true, the player shrinks.
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+        bool bCanShrink;
+
     // Functions to be called in order to change the above bools to true.
     UFUNCTION()
         void EnableDoubleJump();
@@ -61,12 +67,18 @@ public:
     UFUNCTION()
         void EnableGroundSlam();
 
+    UFUNCTION()
+        void EnableShrink();
+
     // Used for the double jump functionality
     UPROPERTY(VisibleAnywhere)
         bool hasJumped = false;
 
     UPROPERTY(VisibleAnywhere)
     bool bHasDashed = false;
+
+    UPROPERTY(VisibleAnywhere)
+        bool bhasShrinked = false;
 
     // Speed properties
     UPROPERTY(EditAnywhere, BlueprintReadWrite)

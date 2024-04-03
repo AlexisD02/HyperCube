@@ -21,6 +21,7 @@ void UCustomCubeMovementComponent::BeginPlay()
     bCanDoubleJump = false;
     bCanDash = false;
     bCanGroundSlam = false;
+    bCanShrink = false;
 }
 
 void UCustomCubeMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -77,6 +78,25 @@ void UCustomCubeMovementComponent::EnableDash()
 void UCustomCubeMovementComponent::EnableGroundSlam()
 {
     bCanGroundSlam = true;
+}
+
+void UCustomCubeMovementComponent::EnableShrink()
+{
+    bCanShrink = true;
+}
+
+void UCustomCubeMovementComponent::Shrink()
+{
+    if (bCanShrink)
+    {
+            if (!bhasShrinked)
+            {
+                FVector scale = GetOwner()->GetActorScale3D();
+                GetOwner()->SetActorScale3D(scale * 0.5f);
+                bhasShrinked = true;
+            }
+    }
+    
 }
 
 

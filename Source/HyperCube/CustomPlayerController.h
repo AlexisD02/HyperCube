@@ -31,6 +31,9 @@ public:
     // Function to handle dash input
     void CallDash();
 
+    // Function to handle Shrink input
+    void CallShrink();
+
     // Function to handle dash input
     void CallGroundSlam();
 
