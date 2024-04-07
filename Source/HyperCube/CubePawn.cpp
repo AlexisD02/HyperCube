@@ -13,7 +13,7 @@ ACubePawn::ACubePawn()
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 
     CubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
-   // CubeMesh->SetSimulatePhysics(true);
+    CubeMesh->SetSimulatePhysics(true);
     CubeMesh->BodyInstance.SetUseCCD(true); // Enable CCD
     RootComponent = CubeMesh;
 

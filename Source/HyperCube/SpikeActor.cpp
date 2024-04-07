@@ -49,6 +49,7 @@ void ASpikeActor::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImp
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Cube can ghost!"));
 			CubeCondition = true;
+			SpikeMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		}
 	}
 	
