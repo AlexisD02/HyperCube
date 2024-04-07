@@ -22,6 +22,7 @@ void UCustomCubeMovementComponent::BeginPlay()
     bCanDash = false;
     bCanGroundSlam = false;
     bCanShrink = false;
+    bCanGhost = false;
 }
 
 void UCustomCubeMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -37,6 +38,11 @@ void UCustomCubeMovementComponent::Move(float Value)
     if (Value != 0.0f) {
         // Update the speed with direction
         CurrentSpeed = NormalSpeed * FMath::Sign(Value);
+
+        if (bCanGhost) {
+            UE_LOG(LogTemp, Warning, TEXT("con"));
+            GhostCon();
+        }
     }
 }
 
@@ -85,6 +91,11 @@ void UCustomCubeMovementComponent::EnableShrink()
     bCanShrink = true;
 }
 
+void UCustomCubeMovementComponent::EnableGhost()
+{
+    bCanGhost = true;
+}
+
 void UCustomCubeMovementComponent::Shrink()
 {
     if (bCanShrink)
@@ -97,6 +108,17 @@ void UCustomCubeMovementComponent::Shrink()
             }
     }
     
+}
+
+void UCustomCubeMovementComponent::GhostCon()
+{
+    UStaticMeshComponent* CubeMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+
+    if (CubeMesh) {
+        UE_LOG(LogTemp, Warning, TEXT("coll"));
+        CubeMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+    }
+
 }
 
 

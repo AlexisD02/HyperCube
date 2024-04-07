@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "CubePawn.h"
 #include "CustomPlayerController.h"
+#include "CustomCubeMovementComponent.h"
+
 
 // Sets default values
 ASpikeActor::ASpikeActor()
@@ -14,6 +16,9 @@ ASpikeActor::ASpikeActor()
 
 	SpikeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Spike Mesh"));
 	SetRootComponent(SpikeMesh);
+
+	SpikeMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	SpikeMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 
 }
 
@@ -35,8 +40,21 @@ void ASpikeActor::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImp
 {
 	UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Something."));
 
-	if (OtherActor && OtherActor->GetClass()->IsChildOf(ACubePawn::StaticClass()))
+	ACubePawn* CubePawn = Cast<ACubePawn>(OtherActor);
+	if (CubePawn)
 	{
+
+		UCustomCubeMovementComponent* MovementComponent = CubePawn->FindComponentByClass<UCustomCubeMovementComponent>();
+		if (MovementComponent && MovementComponent->bCanGhost)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cube can ghost!"));
+			CubeCondition = true;
+		}
+	}
+	
+	if (OtherActor && OtherActor->GetClass()->IsChildOf(ACubePawn::StaticClass()) && !CubeCondition)
+	{
+
 		UE_LOG(LogTemp, Warning, TEXT("Spike Collided with Cuber!"));
 
 		// Attempt to cast to CustomPlayerController

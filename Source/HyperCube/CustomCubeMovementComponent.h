@@ -37,6 +37,8 @@ public:
 
     void Shrink();
 
+    void GhostCon();
+
     float GetCurrentSpeed();
 
     bool IsGrounded();
@@ -57,6 +59,10 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         bool bCanShrink;
 
+    // When you get the power-up, this becomes true, the player can Ghost.
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+        bool bCanGhost;
+
     // Functions to be called in order to change the above bools to true.
     UFUNCTION()
         void EnableDoubleJump();
@@ -69,6 +75,9 @@ public:
 
     UFUNCTION()
         void EnableShrink();
+
+    UFUNCTION()
+        void EnableGhost();
 
     // Used for the double jump functionality
     UPROPERTY(VisibleAnywhere)
